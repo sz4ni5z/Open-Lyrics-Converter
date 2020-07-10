@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
-using OpenLyricsConverter_v2.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,10 +16,11 @@ namespace OpenLyricsConverter_v2
         #region Private Members
         ITreeBuilder tree;
         ComboBoxValues _cbValues = new ComboBoxValues();
-        OpenLyricsEntityViewModel _openlyricsentity = new OpenLyricsEntityViewModel();
+        OpenLyricsEntityViewModel _openlyricsentity;
         string LastSavePath;
         SaveFileDialog saveFileDialog = new SaveFileDialog();
         string _Title = string.Empty;
+        DisplayLanguage _Language;
         string __ImportFromDirectory;
         #endregion
 
@@ -32,8 +33,9 @@ namespace OpenLyricsConverter_v2
             //initialise savefiledialog
             InitialiseSaveFileDialog();
 
-            //set datacontext
-            MainGrid.DataContext = _openlyricsentity;
+            //set view models
+            _openlyricsentity = FindResource("OpenLyricsEntity") as OpenLyricsEntityViewModel;
+            _Language = FindResource("displayLanguage") as DisplayLanguage;
 
             //set combobox values
             SongbookEntry.ItemsSource = _cbValues.ComboBoxValueArray;
@@ -60,7 +62,7 @@ namespace OpenLyricsConverter_v2
             var result = saveFileDialog.ShowDialog();
 
             //Save
-            if(result == true)
+            if (result == true)
             {
                 //store last save path
                 LastSavePath = System.IO.Path.GetDirectoryName(saveFileDialog.FileName);
@@ -87,6 +89,12 @@ namespace OpenLyricsConverter_v2
         {
             _openlyricsentity.Entry = (int)SongbookEntry.SelectedItem;
         }
+        
+        private void LanguageChanger_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _Language.CurrentLanguage = LanguageChanger.SelectedItem.ToString();
+        }
+
         #endregion
     }
 }

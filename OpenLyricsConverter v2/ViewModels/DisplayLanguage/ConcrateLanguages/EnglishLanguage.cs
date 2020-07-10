@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenLyricsConverter_v2.ViewModels
+namespace OpenLyricsConverter_v2
 {
-    class HungarianLanguage : BaseViewModel, ILanguages
+    [LanguageAttribute("English")]
+    class EnglishLanguage : BaseViewModel, ILanguages
     {
 
         string _title;
@@ -14,15 +15,17 @@ namespace OpenLyricsConverter_v2.ViewModels
         string _songbook;
         string _saveButton;
         string _importButton;
+        string _language;
 
 
-        public HungarianLanguage()
+        public EnglishLanguage()
         {
-            _title = "Cím";
-            _artist = "Szerző";
-            _songbook = "Énekekkönyv";
-            _saveButton = "Mentés";
-            _importButton = "Importálás";
+            _title = "Title";
+            _artist = "Artist";
+            _songbook = "Songbook";
+            _saveButton = "Save";
+            _importButton = "Import";
+            _language = "Language";
         }
         public string Title => _title;
 
@@ -33,5 +36,8 @@ namespace OpenLyricsConverter_v2.ViewModels
         public string SaveButton => _saveButton;
 
         public string ImportButton => _importButton;
+
+        public string Language => _language;
     }
+
 }

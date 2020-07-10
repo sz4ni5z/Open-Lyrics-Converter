@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace OpenLyricsConverter_v2
 {
+    /// <summary>
+    /// Mandatory properties for languages
+    /// </summary>
     interface ILanguages
     {
         string Title { get;}
@@ -14,6 +17,6 @@ namespace OpenLyricsConverter_v2
         string SaveButton { get; }
 
         string ImportButton { get; }
-
+        string Language { get; }
     }
 }

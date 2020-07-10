@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OpenLyricsConverter_v2.ViewModels
+namespace OpenLyricsConverter_v2
 {
     class ComboBoxValues : BaseViewModel
     {

@@ -7,7 +7,12 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="OpenLyrics Converter" Height="450" Width="800">
-    <Grid x:Name="MainGrid" DataContext="{Binding}">
+    <Window.Resources>
+        <local:OpenLyricsEntityViewModel x:Key="OpenLyricsEntity"/>
+        <local:DisplayLanguage x:Key="displayLanguage"/>
+        <local:ComboBoxValues x:Key="rangetothousend"/>
+    </Window.Resources>
+    <Grid x:Name="MainGrid">
         
         <!--Basic structure-->
         <Grid.ColumnDefinitions>
@@ -21,41 +26,62 @@
         </Grid.RowDefinitions>
 
         <!--Verse Input-->
-        <Border Margin="10" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
+        <Border Margin="10" Grid.Column="0" Grid.Row="0"  >
             <materialDesign:Card>
-                <TextBox x:Name="VerseInput" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="{Binding Verse}" />
+                <TextBox x:Name="VerseInput" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" DataContext="{StaticResource OpenLyricsEntity}" Text="{Binding Verse}" />
             </materialDesign:Card>
+        </Border>
+        
+        <!--Navigation Between files-->
+        <Border Grid.Column="0" Grid.Row="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Style="{DynamicResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="ArrowLeft" />
+                </Button>
+
+                <Button Style="{DynamicResource MaterialDesignFlatButton}">
+                    <materialDesign:PackIcon Kind="ArrowRight" />
+                </Button>
+            </StackPanel>
         </Border>
         
         <!--Properties-->
         <Border Grid.Column="1" Grid.Row="0" Margin="10">
             <StackPanel x:Name="PropertyContainer" Orientation="Vertical" Margin="0,5,0,0" Background="White">
+                <!--Language changer-->
+                <StackPanel>
+                    <StackPanel Orientation="Vertical" Background="#fafafa">
+                        <TextBlock DataContext="{StaticResource displayLanguage}" Text="{Binding GetDisplayLanguage.Language, FallbackValue=Language}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                        <ComboBox x:Name="LanguageChanger" Style="{DynamicResource MaterialDesignComboBox}" DataContext="{StaticResource displayLanguage}" ItemsSource="{Binding Languages}" SelectionChanged="LanguageChanger_SelectionChanged"/>
+                    </StackPanel>
+                </StackPanel>
+                
                 <!--Title-->
                 <StackPanel x:Name="TitleContainer" Orientation="Vertical" Background="#fafafa">
-                    <TextBlock Text="Title" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                    <TextBox Style="{DynamicResource MyTextBoxStyle}" Text="{Binding Title}"/>
+                    <TextBlock DataContext="{StaticResource displayLanguage}" Text="{Binding GetDisplayLanguage.Title, FallbackValue=Title}"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                    <TextBox Style="{DynamicResource MyTextBoxStyle}" DataContext="{StaticResource displayLanguage}" Text="{Binding Title}"/>
                 </StackPanel>
 
                 <Line Stroke="White" StrokeThickness="5"  Height="10"/>
 
                 <!--Artist-->
                 <StackPanel x:Name="ArtistContainer" Orientation="Vertical" Margin="0,5,0,0" Background="#fafafa">
-                    <TextBlock Text="Artist" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
-                    <TextBox Style="{StaticResource MyTextBoxStyle}" Text="{Binding Artist}"/>
+                    <TextBlock DataContext="{StaticResource displayLanguage}" Text="{Binding GetDisplayLanguage.Artist, FallbackValue=Artist}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                    <TextBox Style="{StaticResource MyTextBoxStyle}" DataContext="{StaticResource OpenLyricsEntity}" Text="{Binding Artist}"/>
                 </StackPanel>
 
                 <Line Stroke="White" StrokeThickness="5"  Height="10"/>
 
                 <!--Songbook-->
                 <StackPanel x:Name="SongbookContainer" Orientation="Vertical" Margin="0,5,0,0" Background="#fafafa">
-                    <TextBlock Text="Songbook" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
+                    <TextBlock DataContext="{StaticResource displayLanguage}" Text="{Binding GetDisplayLanguage.Songbook, FallbackValue=Songbook}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Style="{StaticResource MyTextBoxStyle}" Text="{Binding Songbook}"/>
-                        <ComboBox x:Name="SongbookEntry" Style="{DynamicResource MaterialDesignComboBox}" Grid.Column="1" ItemsSource="{Binding}" IsEditable="True" SelectionChanged="SongbookEntry_SelectionChanged"></ComboBox>
+                        <TextBox Style="{StaticResource MyTextBoxStyle}" DataContext="{StaticResource OpenLyricsEntity}" Text="{Binding Songbook}"/>
+                        <ComboBox x:Name="SongbookEntry" Style="{DynamicResource MaterialDesignComboBox}" DataContext="{StaticResource rangetothousend}" Grid.Column="1" ItemsSource="{Binding ComboBoxValueArray}" IsEditable="True" SelectionChanged="SongbookEntry_SelectionChanged"></ComboBox>
                     </Grid>
                 </StackPanel>
 
@@ -67,14 +93,14 @@
             <Button x:Name="SaveXml" Style="{DynamicResource MaterialDesignFlatButton}" Click="SaveXml_Click" DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="ContentSave" Margin="0,0,10,0"/>
-                    <TextBlock Text="Mentés"/>
+                    <TextBlock DataContext="{StaticResource displayLanguage}" Text="{Binding GetDisplayLanguage.SaveButton, FallbackValue=Save}"/>
                 </StackPanel>
             </Button>
 
             <Button x:Name="_ImportFromDirectory" Style="{DynamicResource MaterialDesignFlatButton}" Click="ImportFromDirectory_Click" DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="OpenInApp" Margin="0,0,10,0"/>
-                    <TextBlock Text="Importálás"/>
+                    <TextBlock DataContext="{StaticResource displayLanguage}" Text="{Binding GetDisplayLanguage.ImportButton, FallbackValue=Import}"/>
                 </StackPanel>
             </Button>
         </DockPanel>
